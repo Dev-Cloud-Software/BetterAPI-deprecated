@@ -1,0 +1,32 @@
+image: maven:3.8-openjdk-17
+
+stages:
+  - build
+
+variables:
+  MAVEN_OPTS: >-
+    -Dhttps.protocols=TLSv1.2
+    -Dmaven.repo.local=.m2/repository
+    -Djava.awt.headless=true
+  MAVEN_CLI_OPTS: >-
+    --batch-mode
+    --errors
+    --fail-at-end
+    --show-version
+    -DinstallAtEnd=true
+    -DdeployAtEnd=true  
+
+java-build:
+  stage: build
+  # Cache downloaded dependencies and plugins between builds.
+  # The key here separates one cache per branch/tag ($CI_COMMIT_REF_SLUG)
+  cache:
+    key: "maven-$CI_COMMIT_REF_SLUG"
+    paths:
+      - .m2/repository
+  script:
+    - mvn $MAVEN_CLI_OPTS package -DskipTests=true
+#  artifacts:
+#    name: "Maven artifacts from $CI_PROJECT_NAME on $CI_COMMIT_REF_SLUG"
+#    paths:
+#      - "**/target"

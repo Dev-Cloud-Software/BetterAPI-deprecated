@@ -1,0 +1,441 @@
+# ******************************************************************************
+# * Copyright (c) 2023 DevCloud Software. All Rights reserved.
+# ******************************************************************************
+
+openapi: "3.0.0"
+info:
+  title: BetterAPI
+  description: BetterAPI Minecraft API Dokumentation.
+  version: 1.0.2
+  contact:
+    name: Dev-Cloud Software
+    email: contact@dev-cloud.software
+    url: https://dev-cloud.software/
+
+servers:
+  - url: http:{host}:{port}/{suffix}
+    variables:
+      host:
+        default: localhost
+        description: The IP-Address od the API-Endpoint
+      port: 
+        default: '8080'
+      suffix: 
+        default: api
+
+paths:
+  /players/list:
+    get:
+      tags:
+        - Players
+      operationId: getOnlinePlayers
+      description: This returns an array of playerObjects
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/playerList'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/generalError'
+  /player/{name}:
+    get:
+      tags:
+        - Player
+      operationId: getPlayerInformationbyName
+      description: This returns the Playerinformation or the occured error.
+      parameters:
+        - $ref: "#/components/parameters/name"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/playerInformation"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/generalError"
+  /player/{uuid}:
+    get:
+      tags:
+        - Player
+      operationId: getPlayerInformationbyUUID
+      description: This returns the Playerinformation or the occured error.
+      parameters:
+        - $ref: "#/components/parameters/uuid"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/playerInformation"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/generalError"
+  /player/health/{uuid}:
+    post:
+      tags:
+        - Player
+      operationId: setPlayerhealth
+      description: Set the Playerhealth to the given value.
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 069a79f4-44e9-4726-a5be-fca90e38aaf5
+        - name: value
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 20
+            minimum: 0
+            maximum: 20
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/success"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/generalError"
+  /player/food/{uuid}:
+    post:
+      tags:
+        - Player
+      operationId: setPlayerFoodlevel
+      description: Set the Player Foodlevel to the given value
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 069a79f4-44e9-4726-a5be-fca90e38aaf5
+        - name: value
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 20
+            minimum: 0
+            maximum: 20
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/success"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/generalError"
+  /player/saturation/{uuid}:
+      put:
+        tags:
+          - Player Saturation
+        operationId: addPlayerSaturationlevel
+        description: Add the amount of saturation to the player.
+        parameters:
+          - name: uuid
+            in: path
+            required: true
+            schema:
+              type: string
+              example: 069a79f4-44e9-4726-a5be-fca90e38aaf5
+          - name: value
+            in: query
+            required: true
+            schema:
+              type: integer
+              example: 20
+              minimum: 0
+              maximum: 20
+        responses:
+          '200':
+            description: OK
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/success"
+          '500':
+            description: Internal Server Error
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/generalError"
+      post:
+        tags:
+          - Player Saturation
+        operationId: setPlayerSaturationlevel
+        description: Set the Player saturationlevel to the given value
+        parameters:
+          - name: uuid
+            in: path
+            required: true
+            schema:
+              type: string
+              example: 069a79f4-44e9-4726-a5be-fca90e38aaf5
+          - name: value
+            in: query
+            required: true
+            schema:
+              type: integer
+              example: 20
+              minimum: 0
+              maximum: 20
+        responses:
+          '200':
+            description: OK
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/success"
+          '500':
+            description: Internal Server Error
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/generalError"
+      delete:
+        tags:
+          - Player Saturation
+        operationId: remPlayerSaturationlevel
+        description: Removes the amount of saturation from the player.
+        parameters:
+          - name: uuid
+            in: path
+            required: true
+            schema:
+              type: string
+              example: 069a79f4-44e9-4726-a5be-fca90e38aaf5
+          - name: value
+            in: query
+            required: true
+            schema:
+              type: integer
+              example: 20
+              minimum: 0
+              maximum: 20
+        responses:
+          '200':
+            description: OK
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/success"
+          '500':
+            description: Internal Server Error
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/generalError"
+  /player/experience/{uuid}:
+    put:
+      tags:
+        - Player Experience
+      operationId: addPlayerExperience
+      description: Add the Experience to the player.
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 069a79f4-44e9-4726-a5be-fca90e38aaf5
+        - name: value
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 5
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/success"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/generalError"
+    post:
+      tags:
+        - Player Experience
+      operationId: setPlayerExperience
+      description: Set the Player Experience to the given value
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 069a79f4-44e9-4726-a5be-fca90e38aaf5
+        - name: value
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 5
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/success"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/generalError"
+    delete:
+      tags:
+        - Player Experience
+      operationId: remPlayerExperience
+      description: Remove the given amount of Experience from the Player. 
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+            example: 069a79f4-44e9-4726-a5be-fca90e38aaf5
+        - name: value
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 5
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/success"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/generalError"
+
+components:
+  parameters:
+    uuid:
+      name: uuid
+      in: path
+      required: true
+      schema:
+        type: string
+        example: 069a79f4-44e9-4726-a5be-fca90e38aaf5
+    name:
+      name: playername
+      in: path
+      required: true
+      schema:
+        type: string
+        example: Notch
+    
+  schemas:
+    generalError:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: NotFound
+        message:
+          type: string
+          example: The given Player was not found.
+    success:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: Success
+        message:
+          type: string
+          example: Executed action successfully
+    playerList:
+      description: Array of Players
+      type: object
+      properties:
+        players:
+          type: array
+          items:
+            $ref: '#/components/schemas/player'
+    playerInformation:
+      type: object
+      required:
+        - uuid
+      properties:
+        name:
+          type: string
+          example: Notch
+        uuid:
+          type: string
+          example: 069a79f4-44e9-4726-a5be-fca90e38aaf5
+        ipaddress:
+          type: string
+          example: 192.168.178.32
+        location:
+          type: string
+          example: todo
+        worldname:
+          type: string
+          example: todo
+        health:
+          type: number
+          format: double
+          example: 20.0
+        saturation:
+          type: number
+          format: float
+          example: 18.0
+        level:
+          type: integer
+          example: 3
+        gamemode:
+          type: string
+          example: SURVIVAL
+    player:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Notch
+        uuid:
+          type: string
+          example: 069a79f4-44e9-4726-a5be-fca90e38aaf5

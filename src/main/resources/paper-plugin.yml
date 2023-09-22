@@ -1,0 +1,23 @@
+# ******************************************************************************
+# * Copyright (c) 2023 DevCloud Software. All Rights reserved.
+# ******************************************************************************
+
+name: BetterAPI
+version: '${project.version}'
+main: systems.devcloud.betterapi.BetterAPI
+api-version: '1.20'
+description: BetterAPI > RestAPI for managing the server instance
+author: DevCloud Systems
+
+permissions:
+  betterapi.register:
+    description: "API Register permission"
+    default: true
+
+commands:
+  register:
+    description: "Register for Privileges to the API"
+    usage: "/register"
+    aliases: [reg, register]
+    permission: betterapi.register
+    permission-message: "You do not have permission to use this command"
