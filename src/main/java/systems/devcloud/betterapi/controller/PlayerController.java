@@ -4,7 +4,9 @@
 
 package systems.devcloud.betterapi.controller;
 
-import static spark.Spark.*;
+import static spark.Spark.get;
+import static spark.Spark.post;
+import static systems.devcloud.betterapi.BetterAPI.localizer;
 import static systems.devcloud.betterapi.BetterAPI.mm;
 import static systems.devcloud.betterapi.utils.General.distinct;
 import static systems.devcloud.betterapi.utils.PlayerHelper.playerToJSON;
@@ -24,13 +26,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 import spark.Request;
 import spark.Response;
 import systems.devcloud.betterapi.dto.PlayerDTO;
-import systems.devcloud.betterapi.utils.Localizer;
 
 @Log
 public class PlayerController {
 
     private final JavaPlugin plugin;
-    private static final Localizer localizer = new Localizer();
 
     public PlayerController(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -42,6 +42,7 @@ public class PlayerController {
         get("/player/:uuid", this::getPlayer);
         post("player/health/:uuid", this::setPlayerHealth);
         post("player/food/:uuid", this::setPlayerFoodLevel);
+        post("player/saturation/:uuid", this::setPlayerSaturation);
     }
 
     private JsonArray listPlayers(Request request, Response response) {
@@ -70,7 +71,8 @@ public class PlayerController {
                 .playerLocation(player.getLocation().toString())
                 .playerWorldName(player.getWorld().getName())
                 .playerHealth(player.getHealth())
-                .playerSaturation(player.getFoodLevel())
+                .playerSaturation(player.getSaturation())
+                .playerFoodLevel(player.getFoodLevel())
                 .playerLevel(player.getLevel())
                 .playerExpereince(player.getTotalExperience())
                 .playerGamemode(player.getGameMode())
@@ -99,11 +101,7 @@ public class PlayerController {
             jsonObject.addProperty("message", "Set health of Player (" + player.getName() + ") to " + value);
             player.sendMessage(
                 mm.deserialize(
-                    String.format(
-                        localizer.get("api.player.health.set"),
-                        localizer.get("prefix"),
-                        value
-                    )
+                    String.format(localizer.get("api.player.health.set"), localizer.get("prefix"), value)
                 )
             );
         } else {
@@ -129,11 +127,33 @@ public class PlayerController {
             );
             player.sendMessage(
                 mm.deserialize(
-                    String.format(
-                        localizer.get("api.player.food.set"),
-                        localizer.get("prefix"),
-                        value
-                    )
+                    String.format(localizer.get("api.player.food.set"), localizer.get("prefix"), value)
+                )
+            );
+        } else {
+            jsonObject.addProperty("message", "Player not found / online");
+        }
+
+        return jsonObject;
+    }
+
+    private JsonObject setPlayerSaturation(Request request, Response response) {
+        JsonObject jsonObject = new JsonObject();
+        String uuid = request.params(":uuid");
+        int value = request.queryParams("value") != null
+            ? Integer.parseInt(request.queryParams("value"))
+            : 20;
+        Player player = Bukkit.getPlayer(UUID.fromString(uuid));
+        if (player != null) {
+            player.setSaturation(value);
+            jsonObject.addProperty("status", "success");
+            jsonObject.addProperty(
+                "message",
+                "Set Saturation of Player (" + player.getName() + ") to " + value
+            );
+            player.sendMessage(
+                mm.deserialize(
+                    String.format(localizer.get("api.player.saturation.set"), localizer.get("prefix"), value)
                 )
             );
         } else {

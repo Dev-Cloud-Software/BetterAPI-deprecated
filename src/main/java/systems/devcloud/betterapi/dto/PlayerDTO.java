@@ -20,6 +20,7 @@ public class PlayerDTO {
     private String playerLocation;
     private String playerWorldName;
     private double playerHealth;
+    private float playerFoodLevel;
     private float playerSaturation;
     private int playerLevel;
     private int playerExpereince;

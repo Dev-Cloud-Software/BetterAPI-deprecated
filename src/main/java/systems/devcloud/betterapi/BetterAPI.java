@@ -15,20 +15,31 @@ import systems.devcloud.betterapi.controller.PlayerController;
 import systems.devcloud.betterapi.utils.Localizer;
 
 @Log
-public final class BetterAPI extends JavaPlugin {
+public class BetterAPI extends JavaPlugin {
 
-    private final Configuration pluginConfig = getConfig();
-    private final PlayerController playerController = new PlayerController(this);
-    private final int apiPort = pluginConfig.getInt("api.port");
-    public static final MiniMessage mm = MiniMessage.miniMessage();
-    private static final Localizer localizer = new Localizer();
+    public static Localizer localizer;
+    private static PlayerController playerController;
+    private int apiPort;
+    public static MiniMessage mm;
+
+    @Override
+    public void onLoad() {
+        Configuration pluginConfig = getConfig();
+        localizer = new Localizer(pluginConfig.getString("general.locale"));
+        playerController = new PlayerController(this);
+        this.apiPort = pluginConfig.getInt("api.port");
+        mm = MiniMessage.miniMessage();
+        log.info(String.format(localizer.get("plugin.loaded"), localizer.get("prefix")));
+    }
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        port(apiPort);
 
+        port(apiPort);
+        configureSpark();
         log.info(String.format(localizer.get("api.running"), apiPort));
+
         playerController.implementPlayerRoutes();
         log.info(String.format(localizer.get("plugin.enabled"), localizer.get("prefix")));
     }
@@ -37,11 +48,6 @@ public final class BetterAPI extends JavaPlugin {
     public void onDisable() {
         stop(); // Stops the API
         log.info(String.format(localizer.get("plugin.disabled"), localizer.get("prefix")));
-    }
-
-    @Override
-    public void onLoad() {
-        log.info(String.format(localizer.get("plugin.loaded"), localizer.get("prefix")));
     }
 
     private void configureSpark() {

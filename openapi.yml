@@ -85,6 +85,50 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/generalError"
+  /player/food/{uuid}:
+    post:
+      tags:
+        - Player Food
+      operationId: setPlayerHealth
+      description: This sets the Food Level of the given player.
+      parameters:
+        - $ref: "#/components/parameters/uuid"
+        - $ref: "#/components/parameters/value"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/success"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/generalError"
+  /player/saturation/{uuid}:
+    post:
+      tags:
+        - Player Food
+      operationId: setPlayerHealth
+      description: This sets the Saturation of the given player.
+      parameters:
+        - $ref: "#/components/parameters/uuid"
+        - $ref: "#/components/parameters/value"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/success"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/generalError"
 components:
   parameters:
     uuid:
@@ -169,6 +213,10 @@ components:
               type: number
               format: double
               example: 20.0
+            foodlevel:
+              type: number
+              format: float
+              example: 15.0
             saturation:
               type: number
               format: float
