@@ -22,5 +22,6 @@ public class PlayerDTO {
     private double playerHealth;
     private float playerSaturation;
     private int playerLevel;
+    private int playerExpereince;
     private GameMode playerGamemode;
 }

@@ -7,6 +7,7 @@ package systems.devcloud.betterapi;
 import static spark.Spark.*;
 
 import lombok.extern.java.Log;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.plugin.java.JavaPlugin;
 import systems.devcloud.betterapi.controller.PlayerController;
@@ -17,6 +18,7 @@ public final class BetterAPI extends JavaPlugin {
     private final Configuration pluginConfig = getConfig();
     private final PlayerController playerController = new PlayerController(this);
     private final int apiPort = pluginConfig.getInt("api.port");
+    public static final MiniMessage mm = MiniMessage.miniMessage();
 
     @Override
     public void onEnable() {
@@ -41,15 +43,13 @@ public final class BetterAPI extends JavaPlugin {
 
     private void configureSpark() {
         internalServerError((req, res) -> {
-            res.type("application/json");
             log.info("An Internal Server Error Occurred on the BetterAPI!");
-
+            res.type("application/json");
             return "{\"message\":\"SSSsssorry there was an internal Problem!\"}";
         });
         notFound((req, res) -> {
-            res.type("application/json");
             log.info("A 404 Error Occurred on the BetterAPI!");
-
+            res.type("application/json");
             return "{\"message\":\"SSSsssorry there was an internal Problem!\"}";
         });
     }

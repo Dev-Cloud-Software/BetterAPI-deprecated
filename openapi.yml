@@ -11,16 +11,15 @@ info:
     name: Dev-Cloud Software
     email: contact@dev-cloud.software
     url: https://dev-cloud.software/
-
 servers:
   - url: http:{host}:{port}/{suffix}
     variables:
       host:
         default: localhost
         description: The IP-Address od the API-Endpoint
-      port: 
+      port:
         default: '8080'
-      suffix: 
+      suffix:
         default: api
 
 paths:
@@ -28,7 +27,7 @@ paths:
     get:
       tags:
         - Players
-      operationId: getOnlinePlayers
+      operationId: listPlayers
       description: This returns an array of playerObjects
       responses:
         '200':
@@ -43,32 +42,11 @@ paths:
             application/json:
               schema:
                   $ref: '#/components/schemas/generalError'
-  /player/{name}:
-    get:
-      tags:
-        - Player
-      operationId: getPlayerInformationbyName
-      description: This returns the Playerinformation or the occured error.
-      parameters:
-        - $ref: "#/components/parameters/name"
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/playerInformation"
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/generalError"
   /player/{uuid}:
     get:
       tags:
         - Player
-      operationId: getPlayerInformationbyUUID
+      operationId: getPlayer
       description: This returns the Playerinformation or the occured error.
       parameters:
         - $ref: "#/components/parameters/uuid"
@@ -78,7 +56,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/playerInformation"
+                $ref: "#/components/schemas/playerResponse"
         '500':
           description: Internal Server Error
           content:
@@ -88,24 +66,12 @@ paths:
   /player/health/{uuid}:
     post:
       tags:
-        - Player
-      operationId: setPlayerhealth
-      description: Set the Playerhealth to the given value.
+        - Player Health
+      operationId: setPlayerHealth
+      description: This sets the health of the given player.
       parameters:
-        - name: uuid
-          in: path
-          required: true
-          schema:
-            type: string
-            example: 069a79f4-44e9-4726-a5be-fca90e38aaf5
-        - name: value
-          in: query
-          required: true
-          schema:
-            type: integer
-            example: 20
-            minimum: 0
-            maximum: 20
+        - $ref: "#/components/parameters/uuid"
+        - $ref: "#/components/parameters/value"
       responses:
         '200':
           description: OK
@@ -119,235 +85,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/generalError"
-  /player/food/{uuid}:
-    post:
-      tags:
-        - Player
-      operationId: setPlayerFoodlevel
-      description: Set the Player Foodlevel to the given value
-      parameters:
-        - name: uuid
-          in: path
-          required: true
-          schema:
-            type: string
-            example: 069a79f4-44e9-4726-a5be-fca90e38aaf5
-        - name: value
-          in: query
-          required: true
-          schema:
-            type: integer
-            example: 20
-            minimum: 0
-            maximum: 20
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/success"
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/generalError"
-  /player/saturation/{uuid}:
-      put:
-        tags:
-          - Player Saturation
-        operationId: addPlayerSaturationlevel
-        description: Add the amount of saturation to the player.
-        parameters:
-          - name: uuid
-            in: path
-            required: true
-            schema:
-              type: string
-              example: 069a79f4-44e9-4726-a5be-fca90e38aaf5
-          - name: value
-            in: query
-            required: true
-            schema:
-              type: integer
-              example: 20
-              minimum: 0
-              maximum: 20
-        responses:
-          '200':
-            description: OK
-            content:
-              application/json:
-                schema:
-                  $ref: "#/components/schemas/success"
-          '500':
-            description: Internal Server Error
-            content:
-              application/json:
-                schema:
-                  $ref: "#/components/schemas/generalError"
-      post:
-        tags:
-          - Player Saturation
-        operationId: setPlayerSaturationlevel
-        description: Set the Player saturationlevel to the given value
-        parameters:
-          - name: uuid
-            in: path
-            required: true
-            schema:
-              type: string
-              example: 069a79f4-44e9-4726-a5be-fca90e38aaf5
-          - name: value
-            in: query
-            required: true
-            schema:
-              type: integer
-              example: 20
-              minimum: 0
-              maximum: 20
-        responses:
-          '200':
-            description: OK
-            content:
-              application/json:
-                schema:
-                  $ref: "#/components/schemas/success"
-          '500':
-            description: Internal Server Error
-            content:
-              application/json:
-                schema:
-                  $ref: "#/components/schemas/generalError"
-      delete:
-        tags:
-          - Player Saturation
-        operationId: remPlayerSaturationlevel
-        description: Removes the amount of saturation from the player.
-        parameters:
-          - name: uuid
-            in: path
-            required: true
-            schema:
-              type: string
-              example: 069a79f4-44e9-4726-a5be-fca90e38aaf5
-          - name: value
-            in: query
-            required: true
-            schema:
-              type: integer
-              example: 20
-              minimum: 0
-              maximum: 20
-        responses:
-          '200':
-            description: OK
-            content:
-              application/json:
-                schema:
-                  $ref: "#/components/schemas/success"
-          '500':
-            description: Internal Server Error
-            content:
-              application/json:
-                schema:
-                  $ref: "#/components/schemas/generalError"
-  /player/experience/{uuid}:
-    put:
-      tags:
-        - Player Experience
-      operationId: addPlayerExperience
-      description: Add the Experience to the player.
-      parameters:
-        - name: uuid
-          in: path
-          required: true
-          schema:
-            type: string
-            example: 069a79f4-44e9-4726-a5be-fca90e38aaf5
-        - name: value
-          in: query
-          required: true
-          schema:
-            type: integer
-            example: 5
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/success"
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/generalError"
-    post:
-      tags:
-        - Player Experience
-      operationId: setPlayerExperience
-      description: Set the Player Experience to the given value
-      parameters:
-        - name: uuid
-          in: path
-          required: true
-          schema:
-            type: string
-            example: 069a79f4-44e9-4726-a5be-fca90e38aaf5
-        - name: value
-          in: query
-          required: true
-          schema:
-            type: integer
-            example: 5
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/success"
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/generalError"
-    delete:
-      tags:
-        - Player Experience
-      operationId: remPlayerExperience
-      description: Remove the given amount of Experience from the Player. 
-      parameters:
-        - name: uuid
-          in: path
-          required: true
-          schema:
-            type: string
-            example: 069a79f4-44e9-4726-a5be-fca90e38aaf5
-        - name: value
-          in: query
-          required: true
-          schema:
-            type: integer
-            example: 5
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/success"
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/generalError"
-
 components:
   parameters:
     uuid:
@@ -364,16 +101,22 @@ components:
       schema:
         type: string
         example: Notch
-    
+    value:
+      name: value
+      in: query
+      required: true
+      schema:
+        type: integer
+        example: 20
   schemas:
     generalError:
       type: object
       required:
         - name
       properties:
-        name:
+        status:
           type: string
-          example: NotFound
+          example: error
         message:
           type: string
           example: The given Player was not found.
@@ -382,9 +125,9 @@ components:
       required:
         - name
       properties:
-        name:
+        status:
           type: string
-          example: Success
+          example: success
         message:
           type: string
           example: Executed action successfully
@@ -396,40 +139,49 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/player'
-    playerInformation:
+    playerResponse:
       type: object
       required:
         - uuid
       properties:
-        name:
+        status:
           type: string
-          example: Notch
-        uuid:
-          type: string
-          example: 069a79f4-44e9-4726-a5be-fca90e38aaf5
-        ipaddress:
-          type: string
-          example: 192.168.178.32
-        location:
-          type: string
-          example: todo
-        worldname:
-          type: string
-          example: todo
-        health:
-          type: number
-          format: double
-          example: 20.0
-        saturation:
-          type: number
-          format: float
-          example: 18.0
-        level:
-          type: integer
-          example: 3
-        gamemode:
-          type: string
-          example: SURVIVAL
+          example: success
+        player:
+          type: object
+          properties:
+            name:
+              type: string
+              example: Notch
+            uuid:
+              type: string
+              example: 069a79f4-44e9-4726-a5be-fca90e38aaf5
+            ipaddress:
+              type: string
+              example: 192.168.178.32
+            location:
+              type: string
+              example: todo
+            worldname:
+              type: string
+              example: todo
+            health:
+              type: number
+              format: double
+              example: 20.0
+            saturation:
+              type: number
+              format: float
+              example: 18.0
+            level:
+              type: integer
+              example: 3
+            experience:
+              type: integer
+              example: 51
+            gamemode:
+              type: string
+              example: SURVIVAL
     player:
       type: object
       properties:
