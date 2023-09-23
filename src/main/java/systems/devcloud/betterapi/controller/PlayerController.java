@@ -34,7 +34,7 @@ public class PlayerController {
 
     public PlayerController(JavaPlugin plugin) {
         this.plugin = plugin;
-        log.info("PlayerController has been initialized");
+        log.info(String.format(localizer.get("api.player.loaded"), localizer.get("prefix")));
     }
 
     public void implementPlayerRoutes() {
@@ -100,7 +100,8 @@ public class PlayerController {
             player.sendMessage(
                 mm.deserialize(
                     String.format(
-                        "<bold><gradient:#e82730:#fc632b>[BetterAPI]</gradient></bold> <gold>Your health has been set to %s.</gold>",
+                        localizer.get("api.player.health.set"),
+                        localizer.get("prefix"),
                         value
                     )
                 )
@@ -129,7 +130,7 @@ public class PlayerController {
             player.sendMessage(
                 mm.deserialize(
                     String.format(
-                        "<bold><gradient:#e82730:#fc632b>[%s]</gradient></bold> <gold>Your food level has been set to %s.</gold>",
+                        localizer.get("api.player.food.set"),
                         localizer.get("prefix"),
                         value
                     )
